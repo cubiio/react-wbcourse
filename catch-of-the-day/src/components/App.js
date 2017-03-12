@@ -13,8 +13,10 @@ class App extends React.Component {
     // bind helpers i.e. allows use of 'this' for custom methods
     this.addFish = this.addFish.bind(this);
     this.updateFish = this.updateFish.bind(this);
+    this.removeFish = this.removeFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
+    this.removeFromOrder = this.removeFromOrder.bind(this);
     
     // initial state
     this.state = {
@@ -68,6 +70,12 @@ class App extends React.Component {
     this.setState({ fishes });
   }
 
+  removeFish(key) {
+    const fishes = {...this.state.fishes};
+    fishes[key] = null;
+    this.setState({ fishes });
+  }
+
   loadSamples() {
     this.setState({
       fishes: sampleFishes
@@ -80,6 +88,12 @@ class App extends React.Component {
     // update the order: if fish already ordered increment by one or add a new fish
     order[key] = order[key] + 1 || 1;
     // update our state; {order} is the same as {order: order}
+    this.setState({ order });
+  }
+
+  removeFromOrder(key) {
+    const order = {...this.state.order};
+    delete order[key];
     this.setState({ order });
   }
 
@@ -97,8 +111,9 @@ class App extends React.Component {
           </ul>
         </div>
         <Order 
-          fishes={this.state.fishes} 
-          order={this.state.order} 
+          fishes={this.state.fishes}
+          order={this.state.order}
+          removeFromOrder={this.removeFromOrder}
           params={this.props.params}
         />
         <Inventory 
@@ -106,6 +121,7 @@ class App extends React.Component {
           loadSamples={this.loadSamples}
           fishes={this.state.fishes}
           updateFish={this.updateFish}
+          removeFish={this.removeFish}
         />
       </div>
       )
